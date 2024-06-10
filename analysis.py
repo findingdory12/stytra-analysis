@@ -180,13 +180,6 @@ plt.legend(title="Condition")
 plt.tight_layout()
 plt.savefig("plots/reactratepertrial.svg")
 
-# maybe ugly facet bar chart:
-response_rate_per_trial = (
-    responses_max.groupby(["condition", "trial_id"]).size()
-    / par_max_combined.groupby(["condition", "trial_id"]).size()
-)
-response_rate_per_trial = response_rate_per_trial.reset_index(
-    name="response_rate")
 
 # Calculate no-response rate per trial for each condition
 no_response_rate_per_trial = 1 - response_rate_per_trial["response_rate"]
@@ -280,10 +273,10 @@ plot.set_ylim(0, 0.02)
 plt.savefig('plots/vtheta_adj_diff.svg')
 
 # find latencies
-threshold = 0.009
+threshold = 0.009 #Found by plotting vtheta diff vs. time
 
 lat_window = response_og[
-    (response_og["aligned_ms"] >= 0) & (response_og["aligned_ms"] <= 200)
+    (response_og["aligned_ms"] >= 0) & (response_og["aligned_ms"] <= 200) # 0 and 200 ms as the response window
 ]
 
 lat_window["vtheta_adj_diff"] = lat_window.groupby("unique_res_id")[
@@ -334,6 +327,8 @@ plt.savefig("plots/histogram.svg")
 
 latencies.to_csv("latencies.csv", index=False)
 
+# the thresholds for SLC and LLC are determined by the binomial dist of the histplot above
+# change if necessary
 slc_df = latencies[(latencies["aligned_ms"] >= 0) &
                    (latencies["aligned_ms"] <= 23)]
 llc_df = latencies[(latencies["aligned_ms"] >= 23) &
@@ -354,7 +349,7 @@ sns.lineplot(
 )
 
 plt.savefig("plots/vtheta_adj_slc.svg")
-
+plt.figure()
 
 # stacked bar chart of % SLC and LLC per condition
 total_counts = latencies.groupby("condition").size()

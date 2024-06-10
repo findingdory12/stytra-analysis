@@ -10,11 +10,13 @@ import numpy as np
 #%%
 def get_data_dir():
     data_dic = {
-        "sibs": "",
-        "tau": "",
-        # Add more conditions here as needed
         # Format should be
-        # Condition: "path/to/folder"
+        # "Condition": "path/to/folder,
+        # For example
+        # "sibs": "users/rhoshinir/Downloads/240304_f0/sibs"
+        # Add more conditions here as needed
+        "sibs": ,
+        "tau": ,
     }
     return data_dic
 
@@ -314,13 +316,6 @@ histogram = sns.histplot(
 )
 histogram.set_xlim(0, 100)
 histogram.set(xlabel="time (ms)", title="distribution of latencies")
-
-# %%
-#plot one response
-plot1_df = response_og.loc[response_og["unique_res_id"] == ""]
-plot1 = sns.lineplot(data=plot1_df, x="aligned_ms", y="absvtheta")
-plot1.set_xlim(-500, 500)
-plt.savefig("badres.svg")
 
 # %%
 bin_width = 3

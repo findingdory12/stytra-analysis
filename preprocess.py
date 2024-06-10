@@ -93,7 +93,7 @@ def organize_folders(parent_dir, base_dir, num_experiments_per_trial):
 
 def process_trial(trial_path):
     bl_og = 10
-    tap_delay = 0.060
+    tap_delay = 0.060 # Can be fixed with the microphone feedback to determine time of taps
     bl = bl_og + tap_delay
     dur = 20
     num = 10
