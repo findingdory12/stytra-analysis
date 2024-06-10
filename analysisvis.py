@@ -10,9 +10,11 @@ import numpy as np
 #%%
 def get_data_dir():
     data_dic = {
-        "sibs": "/Users/evanwilliams/rhoshini/240304/sibs",
-        "tau": "/Users/evanwilliams/rhoshini/240304/tau",
+        "sibs": "",
+        "tau": "",
         # Add more conditions here as needed
+        # Format should be
+        # Condition: "path/to/folder"
     }
     return data_dic
 
