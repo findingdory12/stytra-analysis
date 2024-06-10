@@ -71,7 +71,7 @@ def to_csv(parent_folder):
                 convert_experiment_to_csv(subfolder_path)
 
 
-def organize_folders(base_dir, num_experiments_per_trial):
+def organize_folders(parent_dir, base_dir, num_experiments_per_trial):
     # Get list of all folders in the base directory
     folders = [f for f in os.listdir(
         base_dir) if os.path.isdir(os.path.join(base_dir, f))]
@@ -80,7 +80,7 @@ def organize_folders(base_dir, num_experiments_per_trial):
     # Create trial directories and move folders into them
     for i in range(0, len(folders), num_experiments_per_trial):
         trial_number = i // num_experiments_per_trial + 1
-        trial_folder_name = f"trial{trial_number}"
+        trial_folder_name = f"{parent_dir}trial{trial_number}"
         trial_folder_path = os.path.join(base_dir, trial_folder_name)
         os.makedirs(trial_folder_path, exist_ok=True)
 
@@ -231,13 +231,14 @@ def main():
                         help="Number of experiments per trial for organizing folders (default is 3).")
 
     args = parser.parse_args()
+    parent = str(args.directory).split('/')[-1]
 
     for subdir in os.listdir(args.directory):
         subdir_path = os.path.join(args.directory, subdir)
         if os.path.isdir(subdir_path):  # Ensure it's a directory
             organize(subdir_path)
             to_csv(subdir_path)
-            organize_folders(subdir_path, args.trials)
+            organize_folders(parent, subdir_path, args.trials)
             process_trials(subdir_path)
 
 

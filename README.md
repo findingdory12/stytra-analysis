@@ -1,6 +1,8 @@
-## Sytra Analysis 
+## Stytra Analysis 
 
 ### Installation 
+
+This repository requires Python 3.12 or higher. 
 
 Clone this repository. Then, you'll need to create a virtual environment 
 to be able to run the programs: 
