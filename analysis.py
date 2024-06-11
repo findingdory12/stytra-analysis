@@ -7,16 +7,16 @@ import numpy as np
 import argparse
 
 parser = argparse.ArgumentParser(
-    description="Process and organize directories.")
+    description="Analyze freely swimming fish data.")
 parser.add_argument("directory", type=str,
-                    help="The path to the directory to be processed.")
+                    help="The path to the directory to be analyzed")
 args = parser.parse_args()
 
-current_dir = os.getcwd()
-plots_dir = os.path.join(current_dir, "plots")
+# Use the data directory passed as an argument
+data_dir = args.directory
+plots_dir = os.path.join(data_dir, "plots")
 if not os.path.exists(plots_dir):
     os.makedirs(plots_dir)
-
 
 def create_directory_map(parent_directory):
     data_dic = {}
@@ -101,13 +101,13 @@ downsampled = (
 plot_absvtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="absvtheta", hue="condition")
 plot_absvtheta.set_xlim(-50, 200)
-plt.savefig("plots/absvtheta_avg.svg")
+plt.savefig(os.path.join(plots_dir, "absvtheta_avg.svg"))
 plt.figure() 
 
 plot_vtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="vtheta", hue="condition")
 plot_vtheta.set_xlim(-50, 200)
-plt.savefig("plots/vtheta_avg.svg")
+plt.savefig(os.path.join(plots_dir,"vtheta_avg.svg"))
 plt.figure()
 
 downsampled["time_adj"] = downsampled["time_adj"].astype(int)
@@ -141,7 +141,7 @@ par_plot = sns.histplot(x="aligned_ms", data=par_max_combined, hue="condition", 
                         binwidth=bin_width, bins=num_bins)
 par_plot.set_xlim(0, 200)
 par_plot.set(xlabel="Time [ms]", title="distribution of max " + par)
-plt.savefig('plots/maxangveldist.svg')
+plt.savefig(os.path.join(plots_dir,'maxangveldist.svg'))
 plt.figure()
 
 # new dataframes for responses and no responses
@@ -167,7 +167,7 @@ bp.set_ylim(0.5, 1.1)
 plt.title("React Rate per Trial")
 plt.xlabel("Condition")
 plt.ylabel("Response Rate")
-plt.savefig('plots/responseratepertrial.svg')
+plt.savefig(os.path.join(plots_dir,'responseratepertrial.svg'))
 plt.figure()
 
 
@@ -181,7 +181,7 @@ plt.ylabel("Response Rate")
 plt.xticks(rotation=45, ha="right")
 plt.legend(title="Condition")
 plt.tight_layout()
-plt.savefig("plots/reactratepertrial.svg")
+plt.savefig(os.path.join(plots_dir,"reactratepertrial.svg"))
 plt.figure()
 
 # Calculate no-response rate per trial for each condition
@@ -218,7 +218,7 @@ noresponse_downsampled = downsampled.loc[
 nores = sns.lineplot(data=noresponse_downsampled,
                      x="time_adj", y="absvtheta", hue="condition")
 nores.set_ylim(0, 0.1)
-plt.savefig("plots/noresponse.svg")
+plt.savefig(os.path.join(plots_dir,"noresponse.svg"))
 plt.figure()
 
 min_idx_df = responses_max.loc[responses_max["vtheta"] <= -0.04]
@@ -275,7 +275,7 @@ plot = sns.lineplot(
 )
 plot.set_xlim(-100, 100)
 plot.set_ylim(0, 0.02)
-plt.savefig('plots/vtheta_adj_diff.svg')
+plt.savefig(os.path.join(plots_dir,'vtheta_adj_diff.svg'))
 plt.figure()
 
 # find latencies
@@ -329,7 +329,7 @@ histogram = sns.histplot(
 
 histogram.set_xlim(0, 200)
 histogram.set(xlabel="latency (ms)", title="distribution of latencies")
-plt.savefig("plots/histogram.svg")
+plt.savefig(os.path.join(plots_dir,"histogram.svg"))
 plt.figure()
 
 latencies.to_csv("latencies.csv", index=False)
@@ -355,7 +355,7 @@ sns.lineplot(
     alpha=0.2,
 )
 
-plt.savefig("plots/vtheta_adj_slc.svg")
+plt.savefig(os.path.join(plots_dir,"vtheta_adj_slc.svg"))
 plt.figure()
 
 # stacked bar chart of % SLC and LLC per condition
@@ -387,7 +387,7 @@ sns.barplot(
 plt.ylabel("Percentage")
 plt.legend()
 
-plt.savefig("plots/stackedbarchart.svg")
+plt.savefig(os.path.join(plots_dir,"stackedbarchart.svg"))
 plt.figure()
 
 
@@ -399,7 +399,7 @@ lat_means = (
 )
 strip_plot = sns.stripplot(x="condition", y="aligned_ms", data=lat_means)
 box_plot = sns.boxplot(x="condition", y="aligned_ms", data=lat_means)
-plt.savefig("plots/latencyboxstrip.svg")
+plt.savefig(os.path.join(plots_dir,"latencyboxstrip.svg"))
 plt.figure()
 
 # Latency between SLC vs. LLC
@@ -426,7 +426,7 @@ strip_plot = sns.stripplot(x="condition", y="absvtheta", data=slc_trial_means)
 box_plot = sns.boxplot(x="condition", y="absvtheta", data=slc_trial_means)
 strip_plot.set_ylim(0, 0.5)
 box_plot.set_ylim(0, 0.5)
-plt.savefig('plots/slcmax.svg')
+plt.savefig(os.path.join(plots_dir,'slcmax.svg'))
 plt.figure()
 
 llc_trial_means = llc_max.groupby(['condition', 'trial_id'])[
@@ -435,7 +435,7 @@ strip_plot = sns.stripplot(x="condition", y="absvtheta", data=llc_trial_means)
 box_plot = sns.boxplot(x="condition", y="absvtheta", data=llc_trial_means)
 strip_plot.set_ylim(0, 0.5)
 box_plot.set_ylim(0, 0.5)
-plt.savefig('plots/llcmax.svg')
+plt.savefig(os.path.join(plots_dir,'llcmax.svg'))
 plt.figure()
 
 llc_sibs = llc_trial_means[llc_trial_means['condition'] == 'sibs']['absvtheta']
@@ -446,5 +446,5 @@ trial_means = responses_max.groupby(['condition', 'trial_id'])[
     'absvtheta'].mean().reset_index()
 strip_plot = sns.stripplot(x="condition", y="absvtheta", data=trial_means)
 box_plot = sns.boxplot(x="condition", y="absvtheta", data=trial_means)
-plt.savefig('plots/slcllcmax.svg')
+plt.savefig(os.path.join(plots_dir,'slcllcmax.svg'))
 plt.figure()
