@@ -15,8 +15,8 @@ def get_data_dir():
         # For example
         # "sibs": "users/rhoshinir/Downloads/240304_f0/sibs"
         # Add more conditions here as needed
-        "sibs": ,
-        "tau": ,
+        "sibs": "users/rhoshinir/downloads/240304_f0/sibs",
+        "tau": "users/rhoshinir/downloads/240304_f0/tau""",
     }
     return data_dic
 

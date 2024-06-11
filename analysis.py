@@ -102,11 +102,13 @@ plot_absvtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="absvtheta", hue="condition")
 plot_absvtheta.set_xlim(-50, 200)
 plt.savefig("plots/absvtheta_avg.svg")
+plt.figure() 
 
 plot_vtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="vtheta", hue="condition")
 plot_vtheta.set_xlim(-50, 200)
 plt.savefig("plots/vtheta_avg.svg")
+plt.figure()
 
 downsampled["time_adj"] = downsampled["time_adj"].astype(int)
 
@@ -140,7 +142,7 @@ par_plot = sns.histplot(x="aligned_ms", data=par_max_combined, hue="condition", 
 par_plot.set_xlim(0, 200)
 par_plot.set(xlabel="Time [ms]", title="distribution of max " + par)
 plt.savefig('plots/maxangveldist.svg')
-
+plt.figure()
 
 # new dataframes for responses and no responses
 no_response_max = par_max_combined.loc[par_max_combined["absvtheta"] < 0.04]
@@ -166,6 +168,7 @@ plt.title("React Rate per Trial")
 plt.xlabel("Condition")
 plt.ylabel("Response Rate")
 plt.savefig('plots/responseratepertrial.svg')
+plt.figure()
 
 
 plt.figure(figsize=(14, 8))
@@ -179,7 +182,7 @@ plt.xticks(rotation=45, ha="right")
 plt.legend(title="Condition")
 plt.tight_layout()
 plt.savefig("plots/reactratepertrial.svg")
-
+plt.figure()
 
 # Calculate no-response rate per trial for each condition
 no_response_rate_per_trial = 1 - response_rate_per_trial["response_rate"]
@@ -216,6 +219,8 @@ nores = sns.lineplot(data=noresponse_downsampled,
                      x="time_adj", y="absvtheta", hue="condition")
 nores.set_ylim(0, 0.1)
 plt.savefig("plots/noresponse.svg")
+plt.figure()
+
 min_idx_df = responses_max.loc[responses_max["vtheta"] <= -0.04]
 max_idx_df = responses_max.loc[responses_max["vtheta"] >= 0.04]
 
@@ -271,6 +276,7 @@ plot = sns.lineplot(
 plot.set_xlim(-100, 100)
 plot.set_ylim(0, 0.02)
 plt.savefig('plots/vtheta_adj_diff.svg')
+plt.figure()
 
 # find latencies
 threshold = 0.009 #Found by plotting vtheta diff vs. time
@@ -324,6 +330,7 @@ histogram = sns.histplot(
 histogram.set_xlim(0, 200)
 histogram.set(xlabel="latency (ms)", title="distribution of latencies")
 plt.savefig("plots/histogram.svg")
+plt.figure()
 
 latencies.to_csv("latencies.csv", index=False)
 
@@ -381,6 +388,7 @@ plt.ylabel("Percentage")
 plt.legend()
 
 plt.savefig("plots/stackedbarchart.svg")
+plt.figure()
 
 
 latencies.groupby("condition").size()
@@ -392,6 +400,7 @@ lat_means = (
 strip_plot = sns.stripplot(x="condition", y="aligned_ms", data=lat_means)
 box_plot = sns.boxplot(x="condition", y="aligned_ms", data=lat_means)
 plt.savefig("plots/latencyboxstrip.svg")
+plt.figure()
 
 # Latency between SLC vs. LLC
 slc_conditions = (lat_means["aligned_ms"] >= 0) & (
@@ -418,7 +427,7 @@ box_plot = sns.boxplot(x="condition", y="absvtheta", data=slc_trial_means)
 strip_plot.set_ylim(0, 0.5)
 box_plot.set_ylim(0, 0.5)
 plt.savefig('plots/slcmax.svg')
-
+plt.figure()
 
 llc_trial_means = llc_max.groupby(['condition', 'trial_id'])[
     'absvtheta'].mean().reset_index()
@@ -427,6 +436,7 @@ box_plot = sns.boxplot(x="condition", y="absvtheta", data=llc_trial_means)
 strip_plot.set_ylim(0, 0.5)
 box_plot.set_ylim(0, 0.5)
 plt.savefig('plots/llcmax.svg')
+plt.figure()
 
 llc_sibs = llc_trial_means[llc_trial_means['condition'] == 'sibs']['absvtheta']
 llc_tau = llc_trial_means[llc_trial_means['condition'] == 'tau']['absvtheta']
