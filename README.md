@@ -17,9 +17,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 You should now have all the dependencies. Anytime you run this software, 
-start by activating the virtual environment.
-
-To activate: 
+start by activating the virtual environment by doing this:
 ```
 cd stytra-analysis
 source venv/bin/activate
