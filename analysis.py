@@ -446,5 +446,5 @@ trial_means = responses_max.groupby(['condition', 'trial_id'])[
     'absvtheta'].mean().reset_index()
 strip_plot = sns.stripplot(x="condition", y="absvtheta", data=trial_means)
 box_plot = sns.boxplot(x="condition", y="absvtheta", data=trial_means)
-sns.lineplot(data=trial_means, x="time_adj", y="vtheta_adj", hue="condition")
 plt.savefig('plots/slcllcmax.svg')
+plt.figure()
