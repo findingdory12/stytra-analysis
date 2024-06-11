@@ -13,7 +13,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 You should now have all the dependencies. Anytime you run this software, 
-start by activating the virtual environment. 
+start by activating the virtual environment.
+
+To activate: 
+```
+cd stytra-analysis
+source venv/bin/activate
+```
 
 ### Preprocessing
 
@@ -22,9 +28,10 @@ Before generating analyses, we need to preprocess your raw experimental data:
 python preprocess.py /path/to/experiment --trials TRIAL
 ```
 The `--trials` parameter is optional. It specifies the number of experiments 
-per trial that the analysis should consider aggregations over. If it is not 
-specified, it will be automatically set to 3. The path to the experiment should be an absolute path, 
-not a relative path. 
+per repeats that the analysis should consider aggregations over. If it is not 
+specified, it will be automatically set to 3. The path to the experiment should be an 
+absolute path, not a relative path. 
+If you are on a MacBook, you can just drag and drop the folder into terminal.
 
 To see more information, you can run:
 ```
