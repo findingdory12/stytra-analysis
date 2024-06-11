@@ -46,7 +46,7 @@ It can be run much like preprocessing:
 ```
 python analysis.py /path/to/experiment
 ```
-Running the above command will create all of the plots you need in a folder called
-`plots`. It will also generate a `latencies.csv` file. Remember, this must be run
-with the virtual environment enabled. Additionally, the path to the experiment 
-should be an absolute path, not a relative path. 
+Running the above command will create all of the plots you need in a folder in 
+that data directory called `plots`. It will also generate a `latencies.csv` file. 
+Remember, this must be run with the virtual environment enabled. Additionally, 
+the path to the experiment should be an absolute path, not a relative path. 
