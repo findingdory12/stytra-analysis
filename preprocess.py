@@ -1,7 +1,3 @@
-'''
-RR 2024
-'''
-
 import numpy as np
 import pandas as pd
 import glob
