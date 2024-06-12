@@ -29,7 +29,7 @@ source venv/bin/activate
 
 Before generating analyses, we need to preprocess your raw experimental data:
 ```
-python preprocess.py /path/to/experiment --trials TRIAL
+python preprocess.py <path> --trials <# of repeats per trial>
 ```
 The `--trials` parameter is optional. It specifies the number of experiments 
 per repeats that the analysis should consider aggregations over. If it is not 
