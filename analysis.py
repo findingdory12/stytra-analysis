@@ -12,7 +12,7 @@ parser.add_argument("directory", type=str,
                     help="The path to the directory to be analyzed")
 args = parser.parse_args()
 
-# Use the data directory passed as an argument
+# Save the plots in the data directory which was just passed as an arg
 data_dir = args.directory
 plots_dir = os.path.join(data_dir, "plots")
 if not os.path.exists(plots_dir):
@@ -74,6 +74,7 @@ for condition, parent_folder in data_dic.items():
 group_counts = concatenated_df.groupby("condition")["unique_res_id"].nunique()
 group_counts
 
+# Downsampling the data (downsampled df averaged every 10ms)
 sel_time_begin = -0.5
 time_adj_thres = 10  # ms
 time_adj_bins = np.arange(sel_time_begin * 1000, 500 +
@@ -98,12 +99,14 @@ downsampled = (
     )
     .reset_index()
 )
+# Lineplot of angular speed vs. time
 plot_absvtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="absvtheta", hue="condition")
 plot_absvtheta.set_xlim(-50, 200)
 plt.savefig(os.path.join(plots_dir, "absvtheta_avg.svg"))
 plt.figure() 
 
+# Lineplot of angular velocity (original) vs. time
 plot_vtheta = sns.lineplot(
     data=downsampled, x="time_adj", y="vtheta", hue="condition")
 plot_vtheta.set_xlim(-50, 200)
@@ -117,7 +120,7 @@ res_window_downsampled = downsampled[
 ].reset_index()
 
 # FIND JUST RESPONSES IN DOWNSAMPLED DATA
-par = "absvtheta"  # Parameter to analyze
+par = "absvtheta"  # Parameter to analyze, can change to any
 par_max_combined = pd.DataFrame()
 for cond in res_window_downsampled["condition"].unique():
     that_df = res_window_downsampled.query("condition == @cond")
@@ -150,7 +153,7 @@ no_response_max = par_max_combined.loc[par_max_combined["absvtheta"] < 0.04]
 responses_max = par_max_combined.loc[par_max_combined["absvtheta"] >= 0.04]
 
 # Response rate per condition per trial - box plot
-# box plot code below...:
+
 response_rate_per_trial = (
     responses_max.groupby(["condition", "trial_id"]).size()
     / par_max_combined.groupby(["condition", "trial_id"]).size()
@@ -170,7 +173,7 @@ plt.ylabel("Response Rate")
 plt.savefig(os.path.join(plots_dir,'responseratepertrial.svg'))
 plt.figure()
 
-
+# Bar chart of every trial per condition
 plt.figure(figsize=(14, 8))
 sns.barplot(
     data=response_rate_per_trial, x="trial_id", y="response_rate", hue="condition"
@@ -199,15 +202,7 @@ response_df_melted = response_df.melt(
     id_vars=["condition", "trial_id"], var_name="response_type", value_name="rate"
 )
 
-# Create FacetGrid with bar plots for response and no-response rates
-g = sns.FacetGrid(
-    response_df_melted, col="condition", hue="response_type", col_wrap=3, sharey=False
-)
-g.map_dataframe(sns.barplot, x="trial_id", y="rate")
-g.set_axis_labels("Trial ID", "Rate")
-g.add_legend()
-plt.suptitle("Response Rate vs No-Response Rate per Trial by Condition", y=1.05)
-# plt.show()
+# Downsampled dataframes of responses and no responses
 response_downsampled = downsampled.loc[
     downsampled["unique_res_id"].isin(responses_max["unique_res_id"])
 ]
@@ -215,29 +210,32 @@ response_downsampled = downsampled.loc[
 noresponse_downsampled = downsampled.loc[
     downsampled["unique_res_id"].isin(no_response_max["unique_res_id"])
 ]
+# Averaged lineplot of no responses
 nores = sns.lineplot(data=noresponse_downsampled,
                      x="time_adj", y="absvtheta", hue="condition")
 nores.set_ylim(0, 0.1)
 plt.savefig(os.path.join(plots_dir,"noresponse.svg"))
 plt.figure()
 
+# Flipping the vtheta to be standardized at the start of response
 min_idx_df = responses_max.loc[responses_max["vtheta"] <= -0.04]
 max_idx_df = responses_max.loc[responses_max["vtheta"] >= 0.04]
 
 negative_peak_ids = min_idx_df["unique_res_id"].unique()
 positive_peak_ids = max_idx_df["unique_res_id"].unique()
 
-# DOWNSAMPLED df
+# Downsampled dataframe of responses only
 response_downsampled["vtheta_adj"] = response_downsampled["vtheta"]
 response_downsampled.loc[
     response_downsampled["unique_res_id"].isin(negative_peak_ids), "vtheta_adj"
 ] *= -1
 
-# Original df
+# Original dataframe of responses only
 response_og = concatenated_df.loc[
     concatenated_df["unique_res_id"].isin(responses_max["unique_res_id"])
 ]
 
+# vtheta_adj is flipped angular velocity
 response_og["vtheta_adj"] = response_og["vtheta"]
 response_og.loc[
     response_og["unique_res_id"].isin(negative_peak_ids), "vtheta_adj"
@@ -248,12 +246,14 @@ vtheta_adj_plot = sns.lineplot(
 vtheta_adj_plot.set_xlim(-50, 200)
 vtheta_adj_plot.set_ylim(-0.03, 0.1)
 
+# Aeraged by trial line plot of angular velocity vs. time
 averaged_trial = response_downsampled.groupby(['condition', 'trial_id', 'time_adj'])[
     'vtheta_adj'].mean().reset_index()
 plot = sns.lineplot(data=averaged_trial, x='time_adj',
                     y='vtheta_adj', hue='condition')
 plot.set_xlim(-50, 200)
 
+# Distribution of time at which whatever parameter happens
 par_plot = sns.histplot(
     x="aligned_ms", data=responses_max, hue="condition", stat="density", element="poly"
 )
@@ -332,7 +332,11 @@ histogram.set(xlabel="latency (ms)", title="distribution of latencies")
 plt.savefig(os.path.join(plots_dir,"histogram.svg"))
 plt.figure()
 
-latencies.to_csv("latencies.csv", index=False)
+csv_file_path = os.path.join(data_dir, "latencies.csv")
+
+# Save the DataFrame to CSV
+latencies.to_csv(csv_file_path, index=False)
+
 
 # the thresholds for SLC and LLC are determined by the binomial dist of the histplot above
 # change if necessary
