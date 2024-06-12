@@ -4,6 +4,8 @@ The following package is for analyzing data collected from Stytra. The
 Preprocessing script can be used for both freely-swimming and head-fixed
 fish experiments. The Analysis script is meant for freely-swimming.
 
+Last Updated: 6/12/2024 RR
+
 ### Installation 
 
 This repository requires Python 3.12 or higher. 
