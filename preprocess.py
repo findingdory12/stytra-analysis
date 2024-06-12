@@ -1,3 +1,12 @@
+"""
+Script to organize raw data from Stytra, create CSV files of data, and process 
+to make them analysis ready. Processing includes binning and aligning each 
+stimuli using functions in reframe.py (also found in package).
+
+RR 2024
+"""
+
+
 import numpy as np
 import pandas as pd
 import glob
@@ -92,11 +101,11 @@ def organize_folders(parent_dir, base_dir, num_experiments_per_trial):
 
 
 def process_trial(trial_path):
-    bl_og = 10
+    bl_og = 10 
     tap_delay = 0.060 # Can be fixed with the microphone feedback to determine time of taps
     bl = bl_og + tap_delay
     dur = 20
-    num = 10
+    num = 1
     neg_t_shift = 0.027598
 
     exp_id = 1

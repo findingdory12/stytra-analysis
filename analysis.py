@@ -1,3 +1,11 @@
+"""
+Script to concatenate each trial's df_filtered.csv (pre-habituation, fixed interval)
+data and generating plots of various parameters. "Par" is set to angular velocity but can 
+be customized to user's preference/needs.
+
+RR 2024
+"""
+
 import os
 import glob
 import pandas as pd
@@ -278,7 +286,7 @@ plot.set_ylim(0, 0.02)
 plt.savefig(os.path.join(plots_dir,'vtheta_adj_diff.svg'))
 plt.figure()
 
-# find latencies
+# find latencies based on angular velocity
 threshold = 0.009 #Found by plotting vtheta diff vs. time
 
 lat_window = response_og[
@@ -302,7 +310,7 @@ def first_occurrence_index(df):
 result_indices = lat_window.groupby(
     "unique_res_id").apply(first_occurrence_index)
 
-# Drop rows where result is none
+
 result_indices = result_indices.dropna()
 latencies = lat_window.loc[result_indices, :]
 
